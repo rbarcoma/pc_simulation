@@ -17,37 +17,57 @@ const icons = {
 export function PartsTray() {
   const { mode, currentStep, selectedPart, selectPart, tryAction } = useSimulationStore();
   const activePart = stepsByMode[mode][currentStep]?.partId;
+  const clickOnlyParts = new Set(['case-panel', 'power-test']);
+  const canDragParts = mode === 'assembly' && !clickOnlyParts.has(activePart);
+  const helperText = mode === 'disassembly'
+    ? 'Click parts in the 3D case to remove'
+    : clickOnlyParts.has(activePart)
+      ? `Click the ${activePart === 'power-test' ? 'power test button' : 'case panel'} in the 3D view`
+      : 'Drag to the highlighted 3D guide';
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white/86 p-3 shadow-xl shadow-slate-200/60 backdrop-blur dark:border-white/10 dark:bg-slate-950/78 dark:shadow-black/30">
       <div className="mb-3 flex items-center justify-between px-1">
         <h3 className="font-bold text-slate-950 dark:text-white">Components</h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400">Tap once, then tap again to place</p>
+        <p className="text-xs text-slate-500 dark:text-slate-400">{helperText}</p>
       </div>
       <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-2">
         {parts.map((part) => {
-          return <PartCard key={part.id} part={part} activePart={activePart} selectedPart={selectedPart} selectPart={selectPart} tryAction={tryAction} />;
+          return (
+            <PartCard
+              key={part.id}
+              part={part}
+              activePart={activePart}
+              selectedPart={selectedPart}
+              selectPart={selectPart}
+              tryAction={tryAction}
+              canDrag={canDragParts}
+            />
+          );
         })}
       </div>
     </div>
   );
 }
 
-function PartCard({ part, activePart, selectedPart, selectPart, tryAction }) {
+function PartCard({ part, activePart, selectedPart, selectPart, canDrag }) {
   const Icon = icons[part.id] || SquareStack;
   const active = part.id === activePart;
   const selected = part.id === selectedPart;
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'part',
     item: { partId: part.id },
+    canDrag: () => canDrag,
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
-  }), [part.id]);
+  }), [canDrag, part.id]);
 
   return (
     <button
       ref={drag}
-      onClick={() => (selected ? tryAction(part.id) : selectPart(part.id))}
-      className={`flex min-h-20 cursor-grab flex-col items-start justify-between rounded-lg border p-3 text-left transition active:cursor-grabbing ${
+      onClick={() => selectPart(part.id)}
+      className={`flex min-h-20 flex-col items-start justify-between rounded-lg border p-3 text-left transition ${
+        canDrag ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'
+      } ${
         active
           ? 'border-sky-400 bg-sky-50 shadow-lg shadow-sky-500/10 dark:bg-sky-500/15'
           : 'border-slate-200 bg-white hover:border-sky-200 dark:border-white/10 dark:bg-white/5 dark:hover:border-sky-400/40'

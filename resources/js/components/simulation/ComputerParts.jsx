@@ -37,6 +37,9 @@ function useCurrentPartId() {
 
 function Label({ partId, position }) {
   const part = partMap[partId];
+  const showLabels = useSimulationStore((state) => state.showLabels);
+
+  if (!showLabels) return null;
 
   return (
     <Html position={position} center distanceFactor={9}>
@@ -64,6 +67,48 @@ function Clickable({ partId, children, position = [0, 0, 0] }) {
     >
       {children(active)}
     </group>
+  );
+}
+
+function CableSegment({ from, to, color, radius = 0.018, emissive = color }) {
+  const mid = [(from[0] + to[0]) / 2, (from[1] + to[1]) / 2, (from[2] + to[2]) / 2];
+  const dx = to[0] - from[0];
+  const dy = to[1] - from[1];
+  const dz = to[2] - from[2];
+  const length = Math.sqrt(dx * dx + dy * dy + dz * dz);
+  const angleZ = -Math.atan2(dx, dy);
+
+  return (
+    <mesh position={mid} rotation={[0, 0, angleZ]}>
+      <cylinderGeometry args={[radius, radius, length, 12]} />
+      <meshStandardMaterial color={color} emissive={emissive} emissiveIntensity={0.35} roughness={0.35} />
+    </mesh>
+  );
+}
+
+function CableConnector({ position, color, size = [0.16, 0.1, 0.08] }) {
+  return (
+    <mesh position={position}>
+      <boxGeometry args={size} />
+      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.25} roughness={0.35} />
+    </mesh>
+  );
+}
+
+function CablePath({ points, color, radius, emissive }) {
+  return (
+    <>
+      {points.slice(0, -1).map((point, index) => (
+        <CableSegment
+          key={`${point.join('-')}-${index}`}
+          from={point}
+          to={points[index + 1]}
+          color={color}
+          radius={radius}
+          emissive={emissive}
+        />
+      ))}
+    </>
   );
 }
 
@@ -390,17 +435,54 @@ export function CableSystem({ cableView, exploded }) {
     <Clickable partId="power-cables" position={exploded ? [0, -2.05, 0] : [0, 0, 0]}>
       {() => (
         <group>
-          <mesh position={[-0.8, -0.8, 0.28]} rotation={[0, 0, 0.65]}>
-            <cylinderGeometry args={[0.025, 0.025, 2.3, 12]} />
-            <meshStandardMaterial color="#fb7185" emissive="#7f1d1d" emissiveIntensity={0.4} />
-          </mesh>
+          <CableConnector position={[-1.12, -0.78, 0.42]} color="#fb7185" size={[0.22, 0.16, 0.1]} />
+          <CableConnector position={[-0.98, 0.04, 0.4]} color="#fb7185" size={[0.18, 0.14, 0.08]} />
+          <CableConnector position={[0.5, 0.52, 0.4]} color="#fb7185" size={[0.16, 0.12, 0.08]} />
+          <CableConnector position={[0.66, -0.7, 0.44]} color="#fb7185" size={[0.18, 0.12, 0.08]} />
+          <CableConnector position={[1.16, -0.86, 0.44]} color="#fb7185" size={[0.18, 0.12, 0.08]} />
 
-          <mesh position={[0.75, -0.55, 0.28]} rotation={[0, 0, -0.9]}>
-            <cylinderGeometry args={[0.022, 0.022, 1.65, 12]} />
-            <meshStandardMaterial color="#2dd4bf" emissive="#0f766e" emissiveIntensity={0.35} />
-          </mesh>
+          <CablePath
+            color="#fb7185"
+            emissive="#7f1d1d"
+            radius={0.022}
+            points={[
+              [-1.12, -0.78, 0.42],
+              [-1.12, -0.24, 0.42],
+              [-0.98, 0.04, 0.4],
+            ]}
+          />
+          <CablePath
+            color="#f43f5e"
+            emissive="#881337"
+            radius={0.018}
+            points={[
+              [-1.12, -0.78, 0.42],
+              [-0.62, -0.2, 0.42],
+              [0.5, 0.52, 0.4],
+            ]}
+          />
+          <CablePath
+            color="#fb7185"
+            emissive="#7f1d1d"
+            radius={0.02}
+            points={[
+              [-1.12, -0.78, 0.42],
+              [-0.75, -0.88, 0.44],
+              [0.66, -0.7, 0.44],
+            ]}
+          />
+          <CablePath
+            color="#fecdd3"
+            emissive="#9f1239"
+            radius={0.017}
+            points={[
+              [-1.12, -0.78, 0.42],
+              [-0.1, -1.02, 0.44],
+              [1.16, -0.86, 0.44],
+            ]}
+          />
 
-          <Label partId="power-cables" position={[0, -1.65, 0.8]} />
+          <Label partId="power-cables" position={[-1.7, -0.32, 0.9]} />
         </group>
       )}
     </Clickable>
@@ -421,17 +503,42 @@ export function FrontPanelCables({ cableView, exploded }) {
     <Clickable partId="front-panel" position={exploded ? [0.8, -2.05, 0.2] : [0, 0, 0]}>
       {(active) => (
         <group>
-          <mesh position={[0.95, 0.2, 0.36]} rotation={[0, 0, 1.05]}>
-            <cylinderGeometry args={[0.018, 0.018, 1.45, 12]} />
-            <meshStandardMaterial color={active ? '#67e8f9' : '#2dd4bf'} emissive="#0f766e" emissiveIntensity={active ? 0.9 : 0.4} />
-          </mesh>
+          <CableConnector position={[1.66, 0.7, 0.5]} color="#2dd4bf" size={[0.28, 0.16, 0.08]} />
+          <CableConnector position={[0.68, 0.18, 0.44]} color="#2dd4bf" size={[0.22, 0.12, 0.08]} />
+          <CableConnector position={[0.54, -0.02, 0.45]} color="#38bdf8" size={[0.18, 0.1, 0.07]} />
 
-          <mesh position={[1.25, 0.55, 0.42]}>
-            <boxGeometry args={[0.28, 0.16, 0.08]} />
-            <meshStandardMaterial color="#2dd4bf" emissive="#0f766e" emissiveIntensity={active ? 0.8 : 0.35} />
-          </mesh>
+          <CablePath
+            color={active ? '#67e8f9' : '#2dd4bf'}
+            emissive="#0f766e"
+            radius={0.016}
+            points={[
+              [1.66, 0.7, 0.5],
+              [1.36, 0.7, 0.5],
+              [0.68, 0.18, 0.44],
+            ]}
+          />
+          <CablePath
+            color="#38bdf8"
+            emissive="#075985"
+            radius={0.014}
+            points={[
+              [1.66, 0.62, 0.52],
+              [1.22, 0.42, 0.5],
+              [0.54, -0.02, 0.45],
+            ]}
+          />
+          <CablePath
+            color="#5eead4"
+            emissive="#0f766e"
+            radius={0.012}
+            points={[
+              [1.66, 0.78, 0.48],
+              [1.28, 0.84, 0.5],
+              [0.72, 0.3, 0.44],
+            ]}
+          />
 
-          <Label partId="front-panel" position={[1.15, 0.95, 0.65]} />
+          <Label partId="front-panel" position={[1.78, 0.94, 0.86]} />
         </group>
       )}
     </Clickable>

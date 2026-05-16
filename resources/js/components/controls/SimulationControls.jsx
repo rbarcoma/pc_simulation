@@ -1,10 +1,11 @@
-import { Eye, PauseCircle, PlayCircle, Power, RotateCcw, RotateCw, Sparkles, Split } from 'lucide-react';
+import { Eye, PauseCircle, PlayCircle, Power, RotateCcw, RotateCw, Sparkles, Split, Tags } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useSimulationStore } from '../../store/simulationStore';
 
 const toggles = [
   ['exploded', Split, 'Exploded'],
   ['xray', Eye, 'X-Ray'],
+  ['showLabels', Tags, 'Labels'],
   ['autoRotate', RotateCw, 'Rotate'],
 ];
 

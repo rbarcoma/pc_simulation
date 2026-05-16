@@ -39,6 +39,7 @@ export const useSimulationStore = create((set, get) => ({
   exploded: false,
   cableView: false,
   autoRotate: true,
+  showLabels: true,
   poweredOn: false,
 
   setMode: (mode) =>
@@ -95,6 +96,26 @@ export const useSimulationStore = create((set, get) => ({
     })),
 
   toggle: (key) => set((state) => ({ [key]: !state[key] })),
+
+  missDrop: (partId) => {
+    const state = get();
+    const steps = stepsByMode[state.mode];
+    const step = steps[state.currentStep];
+
+    if (!state.isSessionActive) {
+      set({ feedback: 'Start the session before placing or removing parts.' });
+      return;
+    }
+
+    set((current) => ({
+      mistakes: current.mistakes + 1,
+      score: Math.max(0, current.score - 5),
+      selectedPart: partId,
+      feedback: step
+        ? `Incorrect Placement! Drop ${partId === step.partId ? 'the part' : 'the correct part'} on the highlighted guide.`
+        : 'Incorrect Placement! Use the highlighted guide.',
+    }));
+  },
 
   tryAction: (partId) => {
     const state = get();
