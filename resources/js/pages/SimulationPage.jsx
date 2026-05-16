@@ -32,7 +32,7 @@ export function SimulationPage({ onBack, theme, onThemeToggle }) {
             <PartsTray />
           </div>
           <section className="order-1 flex min-h-[620px] flex-col gap-4 lg:order-2">
-            <PCScene />
+            <PCScene theme={theme} />
             <SimulationControls />
           </section>
           <div className="order-3">

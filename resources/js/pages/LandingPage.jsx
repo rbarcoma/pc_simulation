@@ -4,10 +4,12 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Button } from '../components/ui/Button';
 
-function PreviewPC() {
+function PreviewPC({ theme }) {
+  const isLight = theme === 'light';
+
   return (
     <Canvas camera={{ position: [4.2, 2.5, 4.8], fov: 42 }} dpr={[1, 1.6]}>
-      <color attach="background" args={['#020617']} />
+      <color attach="background" args={[isLight ? '#ffffff' : '#020617']} />
       <ambientLight intensity={0.72} />
       <directionalLight position={[4, 5, 4]} intensity={2.2} />
       <pointLight position={[-3, 2.4, 3]} intensity={1.1} color="#38bdf8" />
@@ -101,13 +103,13 @@ export function LandingPage({ onStart, theme, onThemeToggle }) {
         <div className="grid flex-1 items-center gap-10 py-12 lg:grid-cols-[0.9fr_1.1fr]">
           <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
             <p className="mb-4 text-sm font-semibold uppercase text-sky-600 dark:text-sky-300">
-              Browser-based learning simulator
+              WEB-BASED IT LEARNING SIMULATOR
             </p>
             <h1 className="max-w-3xl text-4xl font-black leading-tight tracking-normal md:text-6xl">
               3D Computer Assembly & Disassembly Simulation
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300 md:text-lg">
-              A clean, beginner-friendly workspace for practicing PC parts, build order, safety reminders, and step-by-step validation.
+              A web-based 3D simulation platform for IT students and aspiring IT professionals to learn computer assembly and disassembly through interactive practice, guided procedures, and real-time validation.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <Button onClick={onStart} className="h-12 px-5">
@@ -124,9 +126,9 @@ export function LandingPage({ onStart, theme, onThemeToggle }) {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.08 }}
-            className="h-[390px] overflow-hidden rounded-xl border border-slate-200 bg-slate-950 shadow-sm dark:border-white/10 md:h-[480px]"
+            className="h-[390px] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-white/10 dark:bg-slate-950 md:h-[480px]"
           >
-            <PreviewPC />
+            <PreviewPC theme={theme} />
           </motion.div>
         </div>
       </section>

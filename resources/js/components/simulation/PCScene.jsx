@@ -19,20 +19,31 @@ import {
   FrontPanelCables,
 } from './ComputerParts';
 
-function SceneContent() {
+function SceneContent({ theme }) {
   const installed = useSimulationStore((state) => state.installed);
   const xray = useSimulationStore((state) => state.xray);
   const exploded = useSimulationStore((state) => state.exploded);
   const cableView = useSimulationStore((state) => state.cableView);
   const autoRotate = useSimulationStore((state) => state.autoRotate);
 
+  const isLight = theme === 'light';
+
   return (
     <>
+      <color attach="background" args={[isLight ? '#ffffff' : '#020617']} />
       <ambientLight intensity={0.8} />
       <directionalLight position={[5, 5, 5]} intensity={1.5} />
       <pointLight position={[-4, 3, 4]} intensity={1.2} color="#38bdf8" />
 
-      <Stars radius={80} depth={40} count={600} factor={3} fade speed={1} />
+      <Stars
+        radius={80}
+        depth={40}
+        count={600}
+        factor={isLight ? 2.2 : 3}
+        fade
+        speed={1}
+        color={isLight ? '#020617' : '#ffffff'}
+      />
 
       {/* CASE dapat always visible */}
       <PCCase xray={xray} exploded={exploded} />
@@ -132,7 +143,7 @@ function PlacementGuide3D({ exploded }) {
   );
 }
 
-export function PCScene() {
+export function PCScene({ theme }) {
   const mode = useSimulationStore((state) => state.mode);
   const currentStep = useSimulationStore((state) => state.currentStep);
   const isSessionActive = useSimulationStore((state) => state.isSessionActive);
@@ -158,13 +169,13 @@ export function PCScene() {
   return (
     <div
       ref={drop}
-      className={`relative min-h-[560px] overflow-hidden rounded-xl border bg-slate-950 shadow-sm transition ${
+      className={`relative min-h-[560px] overflow-hidden rounded-xl border bg-white shadow-sm transition dark:bg-slate-950 ${
         isOver ? 'border-sky-300 ring-4 ring-sky-400/30' : 'border-slate-200 dark:border-white/10'
       }`}
     >
       <Canvas camera={{ position: [0, 1.2, 6], fov: 45 }}>
         <Suspense fallback={null}>
-          <SceneContent />
+          <SceneContent theme={theme} />
         </Suspense>
       </Canvas>
 
