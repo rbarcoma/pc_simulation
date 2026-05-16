@@ -427,7 +427,7 @@ export function CableSystem({ cableView, exploded }) {
 
   if (!show) return null;
 
-  const visible = mode === 'assembly' ? true : currentPartId === 'power-cables' || cableView || selectedPart?.includes('cables');
+  const visible = mode === 'assembly' || currentPartId === 'power-cables' || cableView || selectedPart?.includes('cables') || show;
 
   if (!visible) return null;
 
@@ -495,7 +495,7 @@ export function FrontPanelCables({ cableView, exploded }) {
   const selectedPart = useSimulationStore((state) => state.selectedPart);
   const currentPartId = useCurrentPartId();
   const show = installed['front-panel'];
-  const visible = mode === 'assembly' ? true : currentPartId === 'front-panel' || cableView || selectedPart === 'front-panel';
+  const visible = mode === 'assembly' || currentPartId === 'front-panel' || cableView || selectedPart === 'front-panel' || show;
 
   if (!show || !visible) return null;
 
