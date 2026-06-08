@@ -4,6 +4,85 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Button } from '../components/ui/Button';
 
+function ProceduralPreviewPC() {
+  return (
+    <group rotation={[-0.14, -0.52, 0]} position={[0.55, -0.08, -0.2]}>
+      <mesh position={[0, 0, -0.72]}>
+        <boxGeometry args={[3.4, 2.35, 0.12]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.42} />
+      </mesh>
+      <mesh position={[0, 1.18, 0]}>
+        <boxGeometry args={[3.5, 0.12, 1.55]} />
+        <meshStandardMaterial color="#111827" roughness={0.5} />
+      </mesh>
+      <mesh position={[0, -1.18, 0]}>
+        <boxGeometry args={[3.5, 0.12, 1.55]} />
+        <meshStandardMaterial color="#111827" roughness={0.5} />
+      </mesh>
+      <mesh position={[-1.75, 0, 0]}>
+        <boxGeometry args={[0.12, 2.35, 1.55]} />
+        <meshStandardMaterial color="#111827" roughness={0.5} />
+      </mesh>
+      <mesh position={[1.75, 0, 0]}>
+        <boxGeometry args={[0.12, 2.35, 1.55]} />
+        <meshStandardMaterial color="#111827" roughness={0.5} />
+      </mesh>
+      <mesh position={[-0.2, 0.02, -0.62]}>
+        <boxGeometry args={[1.75, 1.45, 0.08]} />
+        <meshStandardMaterial color="#064e3b" roughness={0.58} />
+      </mesh>
+      {[-0.88, -0.68].map((x) => (
+        <mesh key={x} position={[x, -0.08, -0.52]}>
+          <boxGeometry args={[0.09, 0.9, 0.09]} />
+          <meshStandardMaterial color="#111827" roughness={0.42} />
+        </mesh>
+      ))}
+      {[0.38, 0.58, 0.78].map((x) => (
+        <mesh key={x} position={[x, 0.55, -0.5]}>
+          <boxGeometry args={[0.18, 0.16, 0.11]} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.55} roughness={0.22} />
+        </mesh>
+      ))}
+      <mesh position={[0.18, 0.16, -0.5]}>
+        <boxGeometry args={[0.46, 0.46, 0.12]} />
+        <meshStandardMaterial color="#f8fafc" metalness={0.45} />
+      </mesh>
+      <mesh position={[-0.78, -0.12, -0.49]}>
+        <boxGeometry args={[0.12, 0.82, 0.14]} />
+        <meshStandardMaterial color="#22c55e" />
+      </mesh>
+      <mesh position={[-0.58, -0.12, -0.49]}>
+        <boxGeometry args={[0.12, 0.82, 0.14]} />
+        <meshStandardMaterial color="#16a34a" />
+      </mesh>
+      <mesh position={[-0.04, -0.62, -0.25]}>
+        <boxGeometry args={[1.25, 0.25, 0.2]} />
+        <meshStandardMaterial color="#1f2937" metalness={0.2} roughness={0.34} />
+      </mesh>
+      <mesh position={[-0.32, -0.62, -0.1]}>
+        <torusGeometry args={[0.12, 0.025, 10, 28]} />
+        <meshStandardMaterial color="#020617" />
+      </mesh>
+      <mesh position={[0.18, -0.62, -0.1]}>
+        <torusGeometry args={[0.12, 0.025, 10, 28]} />
+        <meshStandardMaterial color="#020617" />
+      </mesh>
+      <mesh position={[-1.1, -0.88, -0.28]}>
+        <boxGeometry args={[0.7, 0.48, 0.55]} />
+        <meshStandardMaterial color="#475569" metalness={0.55} roughness={0.28} />
+      </mesh>
+      <mesh position={[-1.1, -0.88, 0.02]}>
+        <torusGeometry args={[0.16, 0.025, 10, 32]} />
+        <meshStandardMaterial color="#111827" />
+      </mesh>
+      <mesh position={[1.04, -0.68, -0.28]}>
+        <boxGeometry args={[0.62, 0.42, 0.22]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.42} roughness={0.26} />
+      </mesh>
+    </group>
+  );
+}
+
 function PreviewPC({ theme }) {
   const isLight = theme === 'light';
 
@@ -13,56 +92,7 @@ function PreviewPC({ theme }) {
       <ambientLight intensity={0.72} />
       <directionalLight position={[4, 5, 4]} intensity={2.2} />
       <pointLight position={[-3, 2.4, 3]} intensity={1.1} color="#38bdf8" />
-      <group rotation={[-0.14, -0.52, 0]} position={[0.55, -0.08, -0.2]}>
-        <mesh position={[0, 0, -0.72]}>
-          <boxGeometry args={[3.4, 2.35, 0.12]} />
-          <meshStandardMaterial color="#0f172a" roughness={0.42} />
-        </mesh>
-        <mesh position={[0, 1.18, 0]}>
-          <boxGeometry args={[3.5, 0.12, 1.55]} />
-          <meshStandardMaterial color="#111827" roughness={0.5} />
-        </mesh>
-        <mesh position={[0, -1.18, 0]}>
-          <boxGeometry args={[3.5, 0.12, 1.55]} />
-          <meshStandardMaterial color="#111827" roughness={0.5} />
-        </mesh>
-        <mesh position={[-1.75, 0, 0]}>
-          <boxGeometry args={[0.12, 2.35, 1.55]} />
-          <meshStandardMaterial color="#111827" roughness={0.5} />
-        </mesh>
-        <mesh position={[1.75, 0, 0]}>
-          <boxGeometry args={[0.12, 2.35, 1.55]} />
-          <meshStandardMaterial color="#111827" roughness={0.5} />
-        </mesh>
-        <mesh position={[-0.2, 0.02, -0.62]}>
-          <boxGeometry args={[1.75, 1.45, 0.08]} />
-          <meshStandardMaterial color="#0284c7" />
-        </mesh>
-        <mesh position={[0.18, 0.16, -0.5]}>
-          <boxGeometry args={[0.46, 0.46, 0.12]} />
-          <meshStandardMaterial color="#f8fafc" metalness={0.45} />
-        </mesh>
-        <mesh position={[-0.78, -0.12, -0.49]}>
-          <boxGeometry args={[0.12, 0.82, 0.14]} />
-          <meshStandardMaterial color="#22c55e" />
-        </mesh>
-        <mesh position={[-0.58, -0.12, -0.49]}>
-          <boxGeometry args={[0.12, 0.82, 0.14]} />
-          <meshStandardMaterial color="#16a34a" />
-        </mesh>
-        <mesh position={[-0.04, -0.62, -0.25]}>
-          <boxGeometry args={[1.25, 0.25, 0.2]} />
-          <meshStandardMaterial color="#8b5cf6" />
-        </mesh>
-        <mesh position={[-1.1, -0.88, -0.28]}>
-          <boxGeometry args={[0.7, 0.48, 0.55]} />
-          <meshStandardMaterial color="#f97316" />
-        </mesh>
-        <mesh position={[1.04, -0.68, -0.28]}>
-          <boxGeometry args={[0.62, 0.42, 0.22]} />
-          <meshStandardMaterial color="#facc15" />
-        </mesh>
-      </group>
+      <ProceduralPreviewPC />
       <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.7} />
     </Canvas>
   );
